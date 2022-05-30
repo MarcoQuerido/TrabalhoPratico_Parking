@@ -1,0 +1,9 @@
+{
+  "name": "TrabalhoPratico_Parking",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.18.1",
+    "node": "^17.7.2",
+    "ws": "^8.5.0"
+  }
+}

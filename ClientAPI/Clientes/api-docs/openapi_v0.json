@@ -1,0 +1,554 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "ParkAPI",
+    "title": "API eventos",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Utilizador",
+      "description": "Operações sobre utilizadores"
+    },
+    {
+      "name": "Parque",
+      "description": "Gerir parques"
+    },
+    {
+      "name": "Aluguer",
+      "description": "Obter dados dos alugueres"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": ["Utilizador"],
+        "summary": "Iniciar Sessão",
+        "description": "",
+        "operationId": "loginUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objLoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Utilizador autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Não foram preenchidos todos os campos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse400"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Utilizador não encontrado"
+          }
+        }
+      }
+    },
+    "/registar": {
+      "post": {
+        "tags": ["Utilizador"],
+        "summary": "Registar novo utilizador",
+        "operationId": "registarUser",
+        "requestBody": {
+          "description": "Tipo não é necessário, é atribuido o valor default de 0. <br>0 - Cliente<br>1 - Gestor",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objRegistarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Utilizador criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objRegistarResponse200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Não foram preenchidos todos os campos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse400"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Utilizador não encontrado"
+          }
+        }
+      }
+    },
+    "/verificarToken": {
+      "get": {
+        "tags": ["Utilizador"],
+        "summary": "Verificar token",
+        "operationId": "verificarToken",
+        "responses": {
+          "200": {
+            "description": "Token válido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objResponse200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido"
+          },
+          "404": {
+            "description": "Utilizador não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/saldo": {
+      "get": {
+        "tags": ["Utilizador"],
+        "summary": "Verificar saldo",
+        "operationId": "verificarSaldo",
+        "responses": {
+          "200": {
+            "description": "Saldo atial",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objSaldoResponse200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não pode verificar o saldo"
+          },
+          "404": {
+            "description": "Utilizador não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Utilizador"],
+        "summary": "Adicionar saldo",
+        "operationId": "adicionarSaldo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objAdicionarSaldo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saldo atualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objSaldoResponse200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Não foram preenchidos todos os campos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse400"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Utilizador não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/utilizador": {
+      "get": {
+        "tags": ["Utilizador"],
+        "summary": "Obter os detalhes do utilizador autenticado",
+        "description": "",
+        "operationId": "obter_dados_utilizador",
+        "responses": {
+          "200": {
+            "description": "Objeto com dados do utilizador",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objUtilizador"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não está autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse400"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+
+    "/parque": {
+      "get": {
+        "tags": ["Parques"],
+        "summary": "Obter todas os parques",
+        "description": "",
+        "operationId": "obter_parques",
+        "responses": {
+          "200": {
+            "description": "Lista de lugares",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objParqueResponse200"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro na pesquisa"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Parques"],
+        "summary": "Criar um parque",
+        "description": "",
+        "operationId": "criar_parque",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objParqueRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Parque criado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objRegistarResponse200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Não foram preenchidos todos os campos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não tem autorização para criar o parque",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse400"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro ao criar o parque"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/aluger": {
+      "get": {
+        "tags": ["Aluguer"],
+        "summary": "Obter todos os alugueres de um utilizador",
+        "description": "",
+        "operationId": "obter_alugueres",
+        "responses": {
+          "200": {
+            "description": "Lista com alugueres",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objAluguerResponse200"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não está autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse400"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro na pesquisa"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "objUtilizador": {
+        "type": "object",
+        "properties": {
+          "saldo": {
+            "type": "number"
+          },
+          "tipo": {
+            "type": "number"
+          },
+          "username": {
+            "type": "string"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "objRegistarRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "number"
+          }
+        }
+      },
+      "objVeiculoRequest": {
+        "$ref": "#/components/schemas/objVeiculo"
+      },
+      "objParqueRequest": {
+        "$ref": "#/components/schemas/objParque"
+      },
+      "objAdicionarSaldo": {
+        "type": "object",
+        "properties": {
+          "saldo": {
+            "type": "number"
+          }
+        }
+      },
+      "objLoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "objResponse200": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "objSaldoResponse200": {
+        "type": "object",
+        "properties": {
+          "saldo": {
+            "type": "number"
+          }
+        }
+      },
+      "objLoginResponse400": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "objLoginResponse200": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "objRegistarResponse200": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "objVeiculoResponse200": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/objVeiculo"
+        }
+      },
+      "objParqueResponse200": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/objParque"
+        }
+      },
+      "objAluguerResponse200": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/objAluguer"
+        }
+      },
+      "objAluguer": {
+        "type": "object",
+        "properties": {
+          "horaFim": {
+            "type": "string"
+          },
+          "parqueEntrga": {
+            "type": "string"
+          },
+          "valorFinal": {
+            "type": "number"
+          },
+          "horaInicio": {
+            "type": "string"
+          },
+          "cliente": {
+            "type": "string"
+          },
+          "veiculo": {
+            "type": "object"
+          }
+        }
+      },
+      "objParque": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "rua": {
+            "type": "string"
+          },
+          "lotacao": {
+            "type": "number"
+          },
+          "estado": {
+            "type": "number"
+          }
+        }
+      },
+      "objVeiculo": {
+        "type": "object",
+        "properties": {
+          "matricula": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

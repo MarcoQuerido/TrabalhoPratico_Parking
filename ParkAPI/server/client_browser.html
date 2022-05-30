@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Parques de Estacionamento</title>
+    <style>
+        .Entrada {
+            display: inline-block;
+            margin-right: 40px;
+        }
+        .Saida {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    $(function () {
+        const ws = new WebSocket("ws://localhost:5085");
+        ws.onmessage = function(event) {
+            const msg = event.data;
+            $('#messages').append($('<li>').text(msg));
+            // ws.send(JSON.stringify('mensagem recebida'));
+        };
+
+        ws.onerror = function(event){
+            ws.close();
+            console.log(`Error ${event}`);
+        }
+
+        // -----------------------------
+
+        $('form').submit(function() {
+            event.preventDefault();
+            const msg = $('#m').val();
+            $('#messages').append($('<li>').text(msg));
+            ws.send(msg);
+            $('#m').val(''); // limpar a caixa de texto
+        });
+    });
+</script>
+
+<body>
+<br><br><br><br><br><br><br>
+<center>
+    <h1>Aplicação Web para parques de estacionamento</h1>
+    <div class = "Entrada">
+        <form>
+            <h4>Entrada</h4>
+                <span>Parques</span>
+                <select name="Parques" id="parques">
+                    <option value="Parque1">Parque AAA</option>
+                    <option value="Parque2">Parque BBB</option>
+                    <option value="Parque3">Parque CCC</option>
+                    <option value="Parque4">Parque DDD</option>
+                </select>
+            <br><br><br>
+            <label for="matricula">Matrícula</label>
+            <input type="text" id="matricula" name="matricula"><br><br>
+            <input type="submit" value="Regista entrada">
+        </form>
+    </div>
+    <div class = "Saida">
+        <form>
+            <h4>Saída</h4>
+            <select name="Parques" id="parques2">
+                <option value="Parque1">Parque AAA</option>
+                <option value="Parque2">Parque BBB</option>
+                <option value="Parque3">Parque CCC</option>
+                <option value="Parque4">Parque DDD</option>
+            </select>
+            <br><br><br>
+            <label for="matricula">Matrícula</label>
+            <input type="text" id="matricula2" name="matricula2"><br><br>
+            <input type="submit" value="Regista saida">
+        </form>
+    </div>
+</center>
+
+</body>
+</html>
